@@ -1,31 +1,25 @@
-"""Builds card.svg with live numbers from the GitHub API."""
-import json, subprocess
+"""Builds card.svg from the live numbers on afonso-ribeiro.pages.dev."""
+import re, urllib.request
 
-USER = "deadstrobe5"
-MIN_STARS = 50  # skip uni group projects and toy repos
-MINE = {USER.lower(), "tribalkit"}
+SITE = "https://afonso-ribeiro.pages.dev"
+req = urllib.request.Request(SITE, headers={"User-Agent": "Mozilla/5.0 (profile-card)"})
+html = urllib.request.urlopen(req, timeout=30).read().decode()
+n = [int(x) for x in re.findall(r'data-count="(\d+)"', html)]
+# Order on the site: tokens (avg, max, year), $ (avg, max, year), commits (avg, max, year)
+tok, usd, com = n[0:3], n[3:6], n[6:9]
 
-def gh(*a):
-    return json.loads(subprocess.check_output(["gh", *a], text=True))
-
-merged = gh("search", "prs", "--author", USER, "--merged", "--limit", "500", "--json", "repository")
-ext = [p["repository"]["nameWithOwner"] for p in merged
-       if p["repository"]["nameWithOwner"].split("/")[0].lower() not in MINE]
-star = {r: gh("api", f"repos/{r}")["stargazers_count"] for r in set(ext)}
-ext = [r for r in ext if star[r] >= MIN_STARS]
-repos = sorted(set(ext))
-stars = sum(star[r] for r in repos)
-q = """query($u:String!){user(login:$u){contributionsCollection{
-  totalCommitContributions restrictedContributionsCount totalPullRequestContributions}}}"""
-c = gh("api", "graphql", "-f", f"query={q}", "-F", f"u={USER}")["data"]["user"]["contributionsCollection"]
-commits = c["totalCommitContributions"] + c["restrictedContributionsCount"]
+def short(v):
+    for d, s in ((1e9, "B"), (1e6, "M"), (1e3, "k")):
+        if v >= d:
+            return f"{v / d:.1f}".rstrip("0").rstrip(".") + s
+    return str(v)
 
 stats = [
-    ("PRs merged into other people's repos", f"{len(ext)}"),
-    ("Projects contributed to", f"{len(repos)}"),
-    ("Combined ★ of those projects", f"{stars:,}"),
-    ("Contributions in the last year", f"{commits:,}"),
-    ("Total PRs opened in the last year", f"{c['totalPullRequestContributions']:,}"),
+    ("Tokens burned per year", short(tok[2])),
+    ("Tokens burned on the worst day", short(tok[1])),
+    ("Same thing at API prices, per year", f"${usd[2]:,}"),
+    ("Commits per year", f"{com[2]:,}"),
+    ("Most commits in one day", f"{com[1]:,}"),
 ]
 h = 60 + 30 * len(stats)
 rows = "".join(
@@ -33,7 +27,7 @@ rows = "".join(
     f'<text x="425" y="{75 + 30*i}" class="v" text-anchor="end">{v}</text>'
     for i, (k, v) in enumerate(stats))
 svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="450" height="{h}" viewBox="0 0 450 {h}">
-<style>.t{{font:600 17px 'Segoe UI',Ubuntu,sans-serif;fill:#58a6ff}}.l{{font:400 14px 'Segoe UI',Ubuntu,sans-serif;fill:#c9d1d9}}.v{{font:700 14px 'Segoe UI',Ubuntu,sans-serif;fill:#f0f6fc}}</style>
+<style>.t{{font:600 17px 'Segoe UI',Ubuntu,sans-serif;fill:#d97757}}.l{{font:400 14px 'Segoe UI',Ubuntu,sans-serif;fill:#c9d1d9}}.v{{font:700 14px 'Segoe UI',Ubuntu,sans-serif;fill:#f0f6fc}}</style>
 <rect x="0.5" y="0.5" width="449" height="{h-1}" rx="6" fill="#0d1117" stroke="#30363d"/>
 <text x="25" y="38" class="t">What the token predictor has been up to</text>{rows}
 </svg>'''

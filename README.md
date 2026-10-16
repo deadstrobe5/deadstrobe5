@@ -14,6 +14,7 @@ Software engineer in Lisbon. I build AI/LLM systems for a living and spend my sp
 |---|---:|---|
 | [tox-dev/tox](https://github.com/tox-dev/tox) | 3,958 | [perf(virtualenv): cache failed interpreter discovery](https://github.com/tox-dev/tox/pull/4162) |
 | [lepture/mistune](https://github.com/lepture/mistune) | 3,078 | [perf: ~8% faster rendering by not re-subscripting Callable per token](https://github.com/lepture/mistune/pull/503) |
+| [edgenai/edgen](https://github.com/edgenai/edgen) | 368 | [chore(docs) : Updated Ubuntu installation docs](https://github.com/edgenai/edgen/pull/43) |
 | [web-platform-dx/baseline-browser-mapping](https://github.com/web-platform-dx/baseline-browser-mapping) | 63 | [Parse the timeline on first use instead of on module load](https://github.com/web-platform-dx/baseline-browser-mapping/pull/148) |
 <!-- PRS:END -->
 

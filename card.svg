@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="450" height="210" viewBox="0 0 450 210">
+<style>.t{font:600 17px 'Segoe UI',Ubuntu,sans-serif;fill:#58a6ff}.l{font:400 14px 'Segoe UI',Ubuntu,sans-serif;fill:#c9d1d9}.v{font:700 14px 'Segoe UI',Ubuntu,sans-serif;fill:#f0f6fc}</style>
+<rect x="0.5" y="0.5" width="449" height="209" rx="6" fill="#0d1117" stroke="#30363d"/>
+<text x="25" y="38" class="t">What the token predictor has been up to</text><text x="25" y="75" class="l">PRs merged into other people's repos</text><text x="425" y="75" class="v" text-anchor="end">4</text><text x="25" y="105" class="l">Projects contributed to</text><text x="425" y="105" class="v" text-anchor="end">4</text><text x="25" y="135" class="l">Combined ★ of those projects</text><text x="425" y="135" class="v" text-anchor="end">7,467</text><text x="25" y="165" class="l">Contributions in the last year</text><text x="425" y="165" class="v" text-anchor="end">5,735</text><text x="25" y="195" class="l">Total PRs opened in the last year</text><text x="425" y="195" class="v" text-anchor="end">31</text>
+</svg>
